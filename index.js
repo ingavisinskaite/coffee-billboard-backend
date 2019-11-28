@@ -1,54 +1,73 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
+const cors = require('cors');
+const coffeeData = require('./coffee-data')
+
+let coffeeList = coffeeData;
 
 app.use(bodyParser.json())
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
 
-var port = 3001;
+let port = 3001;
 
-var coffeeList = [{
-        imgUrl: "./latte.jpg",
-        title: "Latte",
-        price: "2.00€"
-    },
-    {
-        imgUrl: "./cappuccino.jpg",
-        title: "Cappuccino",
-        price: "2.20€"
-    },
-    {
-        imgUrl: "./mocha.jpg",
-        title: "Mocha",
-        price: "2.50€"
-    },
-    {
-        imgUrl: "./cold-brew.jpg",
-        title: "Cold brew",
-        price: "3.00€"
-    }
-];
 
 app.get('/coffee', (req, res) => res.json({
-    coffeeList: coffeeList
+    coffeeList
 }))
 
 app.post('/coffee', (req, res) => {
-    const name = req.body.name;
+    const imgUrl = req.body.imgUrl;
+    const title = req.body.title;
+    const price = req.body.price;
+    const id = coffeeList[coffeeList.length - 1].id + 1;
+
+    let newCoffee = {
+        id,
+        imgUrl,
+        title,
+        price,
+    }
+
+    coffeeList.push(newCoffee);
 
     res.json({
-        receivedName: name
+        newCoffee
+    })
+})
+
+app.put('/coffee/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const imgUrl = req.body.imgUrl;
+    const title = req.body.title;
+    const price = req.body.price;
+
+    let editedCoffee = {
+        id,
+        imgUrl,
+        title,
+        price
+    }
+
+    let indexInArray = coffeeList.findIndex(coffee => coffee.id === id);
+    coffeeList[indexInArray] = editedCoffee;
+
+    res.json({
+        editedCoffee
     })
 })
 
 app.delete('/coffee/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    res.json({
-        receivedId: id
-    })
+    coffeeList = coffeeList.filter(coffee => coffee.id !== id);
+
+    res.status(204).send({});
 })
 
 
 app.listen(port, () => {
-    console.log('Hi')
+    console.log('Started listening');
 })
