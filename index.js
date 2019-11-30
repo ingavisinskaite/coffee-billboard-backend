@@ -21,6 +21,7 @@ const corsOptions = {
 
 let port = 3001;
 
+app.options('*', cors(corsOptions))
 app.get('/', (req, res) => {
     res.json({welcome: "Welcome to Coffee Billboard backend!"})
 })
