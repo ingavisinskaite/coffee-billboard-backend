@@ -7,8 +7,10 @@ const coffeeData = require('./coffee-data')
 let coffeeList = coffeeData;
 
 app.use(bodyParser.json())
+
+const allowedOrigins = ['http://localhost:3000', 'https://arcane-scrubland-42634.herokuapp.com/'];
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: allowedOrigins
 }))
 
 let port = 3001;
