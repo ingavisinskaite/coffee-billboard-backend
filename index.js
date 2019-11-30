@@ -13,6 +13,9 @@ app.use(cors({
 
 let port = 3001;
 
+app.get('/', (req, res) => {
+    res.json({welcome: "Welcome to Coffee Billboard backend!"})
+})
 
 app.get('/coffee', (req, res) => res.json({
     coffeeList
@@ -68,6 +71,6 @@ app.delete('/coffee/:id', (req, res) => {
 })
 
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log('Started listening');
 })
