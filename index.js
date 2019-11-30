@@ -8,7 +8,7 @@ let coffeeList = coffeeData;
 
 app.use(bodyParser.json())
 
-const allowedOrigins = ['http://localhost:3000', 'https://ingavisinskaite.github.io/coffee-billboard'];
+const allowedOrigins = ['http://localhost:3000', 'https://ingavisinskaite.github.io'];
 const corsOptions = {
     origin: function (origin, callback) {
       if (allowedOrigins.indexOf(origin) !== -1) {
