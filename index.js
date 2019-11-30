@@ -8,7 +8,7 @@ let coffeeList = coffeeData;
 
 app.use(bodyParser.json())
 
-const allowedOrigins = ['http://localhost:3000', 'https://arcane-scrubland-42634.herokuapp.com/'];
+const allowedOrigins = ['http://localhost:3000', 'https://ingavisinskaite.github.io/coffee-billboard'];
 app.use(cors({
     origin: allowedOrigins
 }))
