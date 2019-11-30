@@ -9,9 +9,15 @@ let coffeeList = coffeeData;
 app.use(bodyParser.json())
 
 const allowedOrigins = ['http://localhost:3000', 'https://ingavisinskaite.github.io/coffee-billboard'];
-app.use(cors({
-    origin: allowedOrigins
-}))
+const corsOptions = {
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+  }
 
 let port = 3001;
 
@@ -19,11 +25,11 @@ app.get('/', (req, res) => {
     res.json({welcome: "Welcome to Coffee Billboard backend!"})
 })
 
-app.get('/coffee', (req, res) => res.json({
+app.get('/coffee', cors(corsOptions), (req, res) => res.json({
     coffeeList
 }))
 
-app.post('/coffee', (req, res) => {
+app.post('/coffee', cors(corsOptions), (req, res) => {
     const imgUrl = req.body.imgUrl;
     const title = req.body.title;
     const price = req.body.price;
@@ -43,7 +49,7 @@ app.post('/coffee', (req, res) => {
     })
 })
 
-app.put('/coffee/:id', (req, res) => {
+app.put('/coffee/:id', cors(corsOptions), (req, res) => {
     const id = Number(req.params.id);
     const imgUrl = req.body.imgUrl;
     const title = req.body.title;
@@ -64,7 +70,7 @@ app.put('/coffee/:id', (req, res) => {
     })
 })
 
-app.delete('/coffee/:id', (req, res) => {
+app.delete('/coffee/:id', cors(corsOptions), (req, res) => {
     const id = Number(req.params.id);
 
     coffeeList = coffeeList.filter(coffee => coffee.id !== id);
