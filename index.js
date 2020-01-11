@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const localDbCredentials = require('./env');
 const databaseCredentials = {
     host: process.env.host || localDbCredentials.host,
-    port: process.env.port || localDbCredentials.port,
+    port: process.env.dbPort || localDbCredentials.port,
     user: process.env.user || localDbCredentials.user,
     password: process.env.password || localDbCredentials.password,
     charset: process.env.charset || localDbCredentials.charset,
