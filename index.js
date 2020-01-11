@@ -3,7 +3,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql');
-const databaseCredentials = require('./env');
+const localDbCredentials = require('./env');
+const databaseCredentials = {
+    host: process.env.host || localDbCredentials.host,
+    port: process.env.port || localDbCredentials.port,
+    user: process.env.user || localDbCredentials.user,
+    password: process.env.password || localDbCredentials.password,
+    charset: process.env.charset || localDbCredentials.charset,
+    database: process.env.database || localDbCredentials.database
+}
 
 app.use(bodyParser.json())
 
