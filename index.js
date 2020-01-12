@@ -29,13 +29,19 @@ const corsOptions = {
 const port = 3001;
 const coffeeTable = 'coffee_data';
 
+const handleErrorIfNeeded = (err, response) => {
+    if (err) {
+        response.json(false);
+        throw err;
+    }
+}
+
 app.options('*', cors(corsOptions))
 app.get('/', (req, res) => {
     let con = mysql.createConnection(databaseCredentials);
 
     con.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
+        handleErrorIfNeeded(err, res);
     });
 
 })
@@ -43,12 +49,11 @@ app.get('/', (req, res) => {
 app.get('/coffee', cors(corsOptions), (req, res) => {
     let con = mysql.createConnection(databaseCredentials);
 
-    con.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
+    con.connect(function (error) {
+        handleErrorIfNeeded(error, res);
 
         con.query(`SELECT * FROM ${coffeeTable}`, function (err, result, fields) {
-            if (err) throw err;
+            handleErrorIfNeeded(err, res);
             res.json(
                 result
             );
@@ -68,17 +73,14 @@ app.post('/coffee', cors(corsOptions), (req, res) => {
     let query = `INSERT INTO ${coffeeTable} (url, title, price) VALUES ('${url}', '${title}', '${price}');`;
 
     con.connect((error) => {
-      console.log(error);
-      con.query(query, (err, result) => {
-        console.log(result);
-        if (err) {
-          res.json(false);
-          throw err;
-        }
-        res.json(result.insertId)
-      });
-  
-      con.end();
+        handleErrorIfNeeded(error, res);
+
+        con.query(query, (err, result) => {
+            handleErrorIfNeeded(err, res);
+            res.json(result.insertId)
+        });
+
+        con.end();
     });
 })
 
@@ -90,17 +92,15 @@ app.get('/coffee/:id', cors(corsOptions), (req, res) => {
     const query = `SELECT * FROM ${coffeeTable} WHERE id = ` + id;
 
     con.connect((error) => {
-        console.log(error);
+        handleErrorIfNeeded(error, res);
+
         con.query(query, (err, result) => {
-          if (err) {
-            res.json(false);
-            throw err;
-          }
-          res.json(result[0]);
+            handleErrorIfNeeded(err, res);
+            res.json(result[0]);
         });
-    
+
         con.end();
-      })
+    })
 })
 
 app.put('/coffee/:id', cors(corsOptions), (req, res) => {
@@ -114,39 +114,31 @@ app.put('/coffee/:id', cors(corsOptions), (req, res) => {
     const query = `UPDATE ${coffeeTable} SET url=?, title=?, price=? WHERE id = ` + id;
 
     con.connect((error) => {
-        console.log(error);
+        handleErrorIfNeeded(error, res);
+
         con.query(query, [url, title, price], (err, result) => {
-          if (err) {
-            res.json(false);
-            throw err;
-          }
-          console.log(result);
-          res.json(result.insertId);
-          console.log('Successfully edited');
+            handleErrorIfNeeded(err, res);
+            res.json(result.insertId);
         });
-    
+
         con.end();
-      })
+    })
 })
 
 app.delete('/coffee/:id', cors(corsOptions), (req, res) => {
     const id = Number(req.params.id);
     let con = mysql.createConnection(databaseCredentials);
 
-    con.connect(function (err) {
-        if (err) throw err;
-        console.log('Connected!');
-    
+    con.connect(function (error) {
+        handleErrorIfNeeded(error, res);
+
         con.query(`DELETE FROM ${coffeeTable} WHERE id = ` + id, function (err, result, fields) {
-          if (err) {
-            res.json(false);
-            throw err;
-          }
-          res.json(true);
+            handleErrorIfNeeded(err, res);
+            res.json(true);
         });
-    
+
         con.end();
-      })
+    })
 })
 
 
